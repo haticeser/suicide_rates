@@ -12,7 +12,8 @@ warnings.filterwarnings("ignore")
 data = pd.read_csv("./master.csv")
 X = data.drop(['suicides/100k pop' , 'suicides_no', 'country-year'], axis=1)
 #delete some "dublicate" features
-#Y=dataset['suicides/100k pop']
+Y=data['suicides/100k pop']
+
 
 # Exclude non-numeric columns before calculating correlation
 numeric_columns = X.select_dtypes(include=[np.number]).columns
@@ -63,3 +64,72 @@ memory usage: 2.5+ MB
 #data.head(2) # look at 1st 5 data points
 
 #data.describe()
+""" 
+plt.scatter(X['gdp_per_capita'], X['gdp_for_year'])
+plt.show() 
+
+
+plt.scatter(X['population'], X['gdp_for_year'])
+plt.show()
+
+plt.scatter(X['gdp_per_capita'], X['HDI for'])
+plt.show()
+
+
+print(X.columns.values)# attributeları yazdırıyor.
+
+X = X[Y< 125]  Bunu dağiştirelim. Y ve X eksenlerini düzenlemek gerek.
+Y = Y[Y<125]
+plt.scatter(X['gdp_for_year'], X['hdi_for_year'])
+plt.show()
+"""
+
+X['gdp_for_year'] = X['gdp_for_year'].str.replace(',','').astype(float)
+#We replace the commas from the values for the data to be converted as float.
+
+
+numeric_features = ['year' , 'hdi_for_year' , 'gdp_for_year', 'population', 'gdp_per_capita']
+categorical_features = ['country' , 'sex' , 'age', 'generation']
+
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+from sklearn.preprocessing import  OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
+
+
+# Numerik ve kategorik özelliklerin adları
+
+
+# Numerik veri ön işlemcisi
+numeric_transformer = Pipeline([
+    ('imputer', SimpleImputer(missing_values='NaN', strategy='mean')),
+    ('scaler', StandardScaler())
+])
+
+# Kategorik veri ön işlemcisi
+categorical_transformer = Pipeline([
+    ('onehot', OneHotEncoder())
+])
+
+# Ön işlemci
+preprocessor = ColumnTransformer([
+    ('num', numeric_transformer, numeric_features),
+    ('cat', categorical_transformer, categorical_features)
+])
+
+# Sınıflandırma modeli
+clf = Pipeline([
+    ('preprocessor', preprocessor)
+])
+
+# Replace NaN values with the mean of each column
+X.fillna(X.mean(), inplace=True)
+
+# Fit and transform the pipeline
+X = clf.fit_transform(X)
+
+#git status
+#git add .
+#git commit -m "commit-message"
+#git push
