@@ -238,6 +238,10 @@ X_val = X_val_array.reshape(X_val_array.shape[0], X_val_array.shape[1])
 #print(df.head(5)) #ilk 5 değeri  yazdırıyor.
 
 
+
+
+
+
 #---------------------------------------------
 #Trying Support Vector Regression
 from sklearn.svm import SVR
@@ -285,7 +289,3 @@ rms_train =np.sqrt(mean_squared_error(y_train, y_pred_train2))
 
 
 
-#git status
-#git add .
-#git commit -m "commit-message"
-#git push
