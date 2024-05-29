@@ -16,7 +16,20 @@ df =  pd.read_csv("./master.csv")
 #print(df)
 
 #print(df.info() )  # print the concise summery of the datasetpi
+
+#print(df.columns) #attributeları yazdırıyor.
+
+#print(df.describe()) #min max bulduk dfyı açıkladık.
+#--------------
+#checking the df for null or missing values
+
+#print(df.isnull().sum())
 #---------------------------
+#Checking the df type of each column
+
+#print(df.dtypes)
+#----------------------------------------------
+
 #bu kısımda bazı sorulara cevap veriyoruz.
 ## What was the highest number of deaths due to Suicide in a year?
 maximum = max(df.suicide_count)
@@ -35,50 +48,45 @@ average = (df.suicide_count).mean()
 #---------------------------------------------------
 
 
-#X = df.drop(['suicide_rate' , 'suicide_count', 'country-year'], axis=1)
-#plt.scatter(X['gdp_per_capita'], X['gdp_for_year'])
+X = df.drop(['suicide_rate' , 'suicide_count', 'country-year'], axis=1)
+plt.scatter(X['gdp_per_capita'], X['gdp_for_year'])
 #plt.show()
 
-""" 
+
 plt.scatter(X['gdp_per_capita'], X['gdp_for_year'])
-plt.show() 
+#plt.show() 
 
 
 plt.scatter(X['population'], X['gdp_for_year'])
-plt.show()
+#plt.show()
 
-plt.scatter(X['gdp_per_capita'], X['HDI for'])
-plt.show()
+plt.scatter(X['gdp_per_capita'], X['hdi_for_year'])
+#plt.show()
 
 
-print(X.columns.values)# attributeları yazdırıyor.
+#print(X.columns.values)# attributeları yazdırıyor.
 
-X = X[Y< 125]  Bunu dağiştirelim. Y ve X eksenlerini düzenlemek gerek.
-Y = Y[Y<125]
+
 plt.scatter(X['gdp_for_year'], X['hdi_for_year'])
-plt.show()
-"""
+#plt.show()
+
+
 # Exclude non-numeric columns before calculating correlation
-#numeric_columns = X.select_dtypes(include=[np.number]).columns
-#corr = X[numeric_columns].corr() #It creates a matrix
+numeric_columns = X.select_dtypes(include=[np.number]).columns
+corr = X[numeric_columns].corr() #It creates a matrix
 #print(corr)
 
 #--------------------------------------------------------
-"""
+
 # Plot heatmap
 sns.heatmap(corr, xticklabels=corr.columns.values, yticklabels=corr.columns.values)
-plt.show()
+#plt.show()
 
-"""
+
 #-----------------------------------------
 
 
 
-
-
-
-
-"""
 
 #belli bir kısmını almak için
 ftr_albania =(df['country'].str.contains('Albania')&
@@ -86,13 +94,13 @@ ftr_albania =(df['country'].str.contains('Albania')&
               df['age'].str.contains('15-24 years'))
 #print(df[ftr_albania][['country','sex','age','suicide_count']])
 
-"""
 
-"""
+
+
 ftr_russia =(df['country'].str.contains('Russia')&
               df['sex'].str.contains('female') &
               df['age'].str.contains('15-24 years'))
-print(df[ftr_russia][['country','sex','age','suicide_count','year']])
+#print(df[ftr_russia][['country','sex','age','suicide_count','year']])
 
 
 year = df[ftr_russia]['year']
@@ -104,25 +112,10 @@ plt.xticks(rotation= 'vertical')
 plt.title('Russian 15-24 years old Female Suicides Cases from 1980 to 2015 ',fontsize=18)
 plt.xlabel('Year')
 plt.ylabel('Suicides Cases')
-plt.show
+#plt.show()
 
 
-
-"""
-
-
-
-
-
-#---------------------------------------
-#print(df.columns) attributeları yazdırıyor.
-#-------------------------------------------
-#print(df.describe()) min max bulduk dfyı açıkladık.
-#-------------------------------------------
-#checking the df for null or missing values
-
-#print(df.isnull().sum())
-#---------------------------------------
+#DROP ETME İŞLEMİNİ ANLATIYORUM. KODUN DEVAMINDA BU DROP EDİLMİŞ DATASET ÜZERİNDEN İŞLME YAPACAĞIM.
 #print(df.shape)
 #(27820, 12) drop yapmadan önce
 #------------------------------------------
@@ -130,7 +123,7 @@ plt.show
 
 df = df.drop(['hdi_for_year'], axis = 1)
 #print(df.shape)
-#print(df.columns) attribute düşürünce kalan attribute listesi
+#print(df.columns) #attribute düşürünce kalan attribute listesi
 #(27820, 11) bir attribute düşürünce
 
 #-----------------------------------------------
@@ -141,12 +134,15 @@ df = df.drop(['country-year'], axis = 1)
 #(27820, 10) bir tane daha düşürünce geriye kaldı 10 attribute
 #---------------------------------------------------
 #droppinf off any null rows (is any)
-"""
+
 df = df.dropna()
-print(df.shape)
+#print(df.shape)
 #(27820, 10) 
-"""
+
 #---------------------------
+
+
+
 """
 The non-numerical labeled columns - -> country -> year -> gender -> age_group -> generation
 
@@ -161,10 +157,8 @@ le = sklearn.preprocessing.LabelEncoder()
 
 for column in categorical:
     df[column] = le.fit_transform(df[column])
+    #print(le.fit_transform(df["sex"])[0:5])  # [1 0 0 0 1]  (1: male, 0: female)
 
-#Checking the df type of each column
-
-#print(df.dtypes)
 
 
 # Converting the column 'gdp_for_year' to float from object
@@ -203,9 +197,6 @@ X = df.drop('suicide_rate',axis=1)
 (27820, 9)
 (27820,)
 """
-
-
-
 
 
 
@@ -250,8 +241,8 @@ from sklearn.metrics import mean_squared_error
 rms_test = np.sqrt(mean_squared_error(y_test , y_pred_test))
 rms_train =np.sqrt(mean_squared_error(y_train, y_pred_train))
 
-#print('The RMSE of the training set is: '+rms_train.astype(str))
-#print('The RMSE of the test set is: '+rms_test.astype(str))
+print('The RMSE of the training set is: '+rms_train.astype(str))
+print('The RMSE of the test set is: '+rms_test.astype(str))
 
 #-------------------------------------------------
 #Trying Decision Tree Regression
